@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
-import { getAccounts, saveAccount } from "./api/localStorage";
+import localStorage from "./api/localStorage";
 
 const App: React.FC = () => {
   const [registered, setRegistered] = useState(false);
@@ -9,9 +9,11 @@ const App: React.FC = () => {
   const [accounts, setAccounts] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    const storedAccounts = getAccounts();
-    if (Object.keys(storedAccounts).length > 0) {
-      setAccounts(storedAccounts);
+    const userStore = localStorage.getState();
+    if (Object.keys(userStore).length > 0) {
+      setAccounts(userStore.userList.reduce((acc: any, user: any) => {
+        return { ...acc, [user.name]: user.password };
+      }, {}));
     }
   }, []);
 
@@ -28,7 +30,8 @@ const App: React.FC = () => {
   };
 
   const handleSaveAccount = (username: string, password: string) => {
-    saveAccount(username, password);
+    localStorage.getState().addUser({ username: username, password: password, url: "", userId: 0 });
+
     setAccounts({ ...accounts, [username]: password });
     setRegistered(false);
   };

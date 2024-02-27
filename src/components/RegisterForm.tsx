@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-
-interface RegisterFormProps {
-  onSave: (username: string, password: string) => void;
-}
+import { RegisterFormProps } from '../components/interface';
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSave }) => {
   const [username, setUsername] = useState('');
